@@ -1,24 +1,24 @@
-const userModel = require("../models/user-model");
+const staffModel = require("../models/staff-model");
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { generateToken } = require("../utils/generateToken");
 
-module.exports.registerUser = async function(req, res){
+module.exports.registerStaff = async function(req, res){
     try{
-        let {email, password, fullname} = req.body;
+        let {email, password, name} = req.body;
 
-        let user = await userModel.findOne({email: email});
-        if(user) return res.status(401).send("you already have an account, please log in");
+        let staff = await staffModel.findOne({email: email});
+        if(staff) return res.status(401).send("you already have an account, please log in");
 
         bcrypt.genSalt(10, function(err, salt) { 
             bcrypt.hash(password, salt, async function(err, hash) {
                 if (err) return res.send(err.message);
                 
                 else{
-                    let user = await userModel.create({
+                    let staff = await staffModel.create({
                         email,
                         password: hash,
-                        fullname,
+                        name,
                     });
                     let token = generateToken(user);
                     res.cookie("token", token);
@@ -34,13 +34,13 @@ module.exports.registerUser = async function(req, res){
     }
 };
 
-module.exports.loginUser = async function(req, res){
+module.exports.loginStaff = async function(req, res){
     let {email, password} = req.body;
 
-    let user = await userModel.findOne({email: email});
-    if(!user) return res.send("Email or Password incorrect");
+    let staff = await staffModel.findOne({email: email});
+    if(!staff) return res.send("Email or Password incorrect");
 
-    bcrypt.compare(password, user.password, function(err, result){
+    bcrypt.compare(password, staff.password, function(err, result){
         if(result){
             let token = generateToken(user);
             res.cookie("token", token);
