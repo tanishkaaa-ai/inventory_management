@@ -42,7 +42,7 @@ module.exports.loginStaff = async function(req, res){
 
     bcrypt.compare(password, staff.password, function(err, result){
         if(result){
-            let token = generateToken(user);
+            let token = generateToken(staff);
             res.cookie("token", token);
             res.send("you can login");
         }

@@ -4,6 +4,10 @@ const cookieParser = require('cookie-parser');
 const path = require("path");
 const expressSession = require("express-session");
 const flash = require("connect-flash");
+const config = require('config');
+require("dotenv").config();
+const mongoose = require("./config/mongoose-connect");
+
 
 const indexRoutes = require("./routes/index");
 const staffrouter = require("./routes/staffRouter");
@@ -14,7 +18,7 @@ app.use(express.urlencoded({extended: true}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 // app.set("view engine", "ejs");
-require("dotenv").config();
+
 app.use(
     expressSession({
         resave:false, // 
