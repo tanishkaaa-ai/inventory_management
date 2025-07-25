@@ -7,8 +7,12 @@ const flash = require("connect-flash");
 const config = require('config');
 require("dotenv").config();
 const mongoose = require("./config/mongoose-connect");
+const cors = require('cors');
 
-
+app.use(cors({
+  origin: 'http://localhost:3000', // frontend URL
+  credentials: true
+}));
 const indexRoutes = require("./routes/index");
 const staffrouter = require("./routes/staffRouter");
 const adminrouter = require("./routes/adminRouter");
