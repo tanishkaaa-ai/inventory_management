@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const staffModel = require("../models/staff-model");
+const adminModel = require("../models/admin-model");
 
 module.exports = async function(req, res, next){
     if(!req.cookies.token){
@@ -9,7 +9,7 @@ module.exports = async function(req, res, next){
 
     try{
         let decoded = jwt.verify(res.cookies.token, process.env.JWT_KEY);
-        let user = await staffModel
+        let user = await adminModel
             .findOne({email: decoded.email})
             .select("-password"); //remove the password field
         req.user = user;
