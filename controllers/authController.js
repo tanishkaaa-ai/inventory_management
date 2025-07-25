@@ -20,7 +20,7 @@ module.exports.registerStaff = async function(req, res){
                         password: hash,
                         name,
                     });
-                    let token = generateToken(user);
+                    let token = generateToken(staff);
                     res.cookie("token", token);
                     res.send("user created successfully");
                 }
