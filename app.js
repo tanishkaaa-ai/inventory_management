@@ -6,6 +6,7 @@ const expressSession = require("express-session");
 const flash = require("connect-flash");
 
 const indexRoutes = require("./routes/index");
+const staffrouter = require("./routes/staffRouter");
 
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
@@ -23,6 +24,7 @@ app.use(
 app.use(flash());
 
 app.use("/", indexRoutes);
+app.use("/staff",staffrouter);
 
 app.listen(3000, () => {
     console.log("server running on port 3000");
