@@ -12,8 +12,8 @@ const isAuthenticated = require('../middlewares/isLoggedinadmin');
 const isAdmin = require('../middlewares/isLoggedinadmin');
 
 router.get('/', isAuthenticated, getAllProducts);
-router.post('/', isAuthenticated, isAdmin, createProduct);
-router.put('/:id', isAuthenticated, isAdmin, updateProduct);
-router.delete('/:id', isAuthenticated, isAdmin, deleteProduct);
+router.post('/create', isAuthenticated, isAdmin, createProduct);
+router.put('/update/:id', isAuthenticated, isAdmin, updateProduct);
+router.delete('/delete/:id', isAuthenticated, isAdmin, deleteProduct);
 
 module.exports = router;
