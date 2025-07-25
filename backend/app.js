@@ -12,6 +12,7 @@ const mongoose = require("./config/mongoose-connect");
 const indexRoutes = require("./routes/index");
 const staffrouter = require("./routes/staffRouter");
 const adminrouter = require("./routes/adminRouter");
+const productrouter = require("./routes/productRouter");
 
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
@@ -31,6 +32,7 @@ app.use(flash());
 app.use("/", indexRoutes);
 app.use("/staff",staffrouter);
 app.use("/admin",adminrouter);
+app.use("/product",productrouter);
 
 app.listen(5000, () => {
     console.log("server running on port 5000");

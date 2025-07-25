@@ -1,3 +1,5 @@
+const express = require('express');
+const router = express.Router();
 const productModel = require("../models/product-model");
 
 // Get all products
@@ -60,6 +62,40 @@ module.exports.deleteProduct = async function (req, res) {
         if (!deleted) return res.status(404).send("Product not found");
 
         res.send("Product deleted successfully");
+    } catch (err) {
+        res.status(500).send(err.message);
+    }
+};
+
+
+module.exports.updateStock = async function (req, res) {
+    try {
+        const { sku, action, quantity } = req.body;
+
+        if (!sku || !action || typeof quantity !== "number" || quantity < 0) {
+            return res.status(400).send("Invalid request data");
+        }
+
+        let product = await productModel.findOne({ sku });
+        if (!product) return res.status(404).send("Product not found");
+
+        switch (action) {
+            case "sale":
+                if (product.stock < quantity) {
+                    return res.status(400).send("Insufficient stock");
+                }
+                product.stock -= quantity;
+                break;
+            case "return":
+            case "restock":
+                product.stock += quantity;
+                break;
+            default:
+                return res.status(400).send("Invalid action type");
+        }
+
+        await product.save();
+        res.send("Stock updated successfully");
     } catch (err) {
         res.status(500).send(err.message);
     }

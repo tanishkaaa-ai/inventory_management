@@ -5,15 +5,17 @@ const {
   createProduct,
   updateProduct,
   deleteProduct,
+  updateStock,
 } = require('../controllers/productController');
 
 // Auth middleware (write your own)
-const isAuthenticated = require('../middlewares/isLoggedinadmin');
+const isAuthenticated = require('../middlewares/isLoggedin');
 const isAdmin = require('../middlewares/isLoggedinadmin');
 
-router.get('/', isAuthenticated, getAllProducts);
-router.post('/create', isAuthenticated, isAdmin, createProduct);
-router.put('/update/:id', isAuthenticated, isAdmin, updateProduct);
-router.delete('/delete/:id', isAuthenticated, isAdmin, deleteProduct);
+router.get('/', isAuthenticated, isAdmin, getAllProducts);
+router.post('/create', isAdmin, createProduct);
+router.put('/update/:id', isAdmin, updateProduct);
+router.delete('/delete/:id', isAdmin, deleteProduct);
+router.put("/updateStock", isAdmin, updateStock);
 
 module.exports = router;
