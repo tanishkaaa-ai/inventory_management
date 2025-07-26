@@ -3,8 +3,7 @@ const staffModel = require("../models/staff-model");
 
 module.exports = async function(req, res, next){
     if(!req.cookies.token){
-        req.flash("error", "you need to login first");
-        return res.redirect("/");
+        return res.status(401).send("You need to login first");
     }
 
     try{
@@ -16,7 +15,6 @@ module.exports = async function(req, res, next){
         next(); //send to next step
     }
     catch(err){
-        req.flash("error", "something went wrong");
-        res.redirect("/");
+         return res.status(401).send("Invalid or expired token");
     }
 };

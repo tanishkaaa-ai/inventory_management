@@ -3,20 +3,21 @@ const adminModel = require("../models/admin-model");
 
 module.exports = async function(req, res, next){
     if(!req.cookies.token){
-        req.flash("error", "you need to login first");
-        return res.redirect("/");
+        return res.status(401).send("You need to login first");
     }
 
     try{
-        let decoded = jwt.verify(res.cookies.token, process.env.JWT_KEY);
+        let decoded = jwt.verify(req.cookies.token, process.env.JWT_KEY);
         let user = await adminModel
             .findOne({email: decoded.email})
             .select("-password"); //remove the password field
+             if (!user) {
+            return res.status(403).send("Forbidden: Admins only");
+        }
         req.user = user;
         next(); //send to next step
     }
     catch(err){
-        req.flash("error", "something went wrong");
-        res.redirect("/");
+        return res.status(401).send("Invalid or expired token");
     }
 };
