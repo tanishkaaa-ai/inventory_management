@@ -56,6 +56,12 @@ const AdminDashboard = ({ onLogout }) => {
             >
               Products
             </a>
+            <a
+              onClick={() => navigate('/admin/inventory-logs')}
+              className="cursor-pointer block text-gray-700 hover:text-blue-600 font-medium"
+            >
+              Inventory Logs
+            </a>
             <a href="#" className="block text-gray-700 hover:text-blue-600 font-medium">
               Settings
             </a>

@@ -136,14 +136,10 @@ module.exports.getLogs = async function (req, res) {
 
         console.log(`✅ Total Logs: ${logs.length}`);
 
-        if (logs.length === 0) {
-            console.log("⚠️ No inventory logs found.");
-        }
-
+        // Optional: log to console
         logs.forEach((log, index) => {
             try {
-                console.log(`
-==== LOG ${index + 1} ====
+                console.log(`\n==== LOG ${index + 1} ====
 Product: ${log.product?.name || "N/A"}
 Action: ${log.action}
 Quantity: ${log.quantity}
@@ -155,7 +151,8 @@ Timestamp: ${new Date(log.timestamp).toLocaleString()}
             }
         });
 
-        res.send("Logs printed to console");
+        // ✅ Send the logs to frontend
+        res.status(200).json({ logs });
     } catch (err) {
         console.error("Error fetching logs:", err);
         res.status(500).send(err.message);

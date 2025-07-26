@@ -6,6 +6,7 @@ import Auth from './components/Auth';
 import AdminDashboard from './pages/AdminDashboard';
 import StaffDashboard from './pages/StaffDashboard';
 import ProductManager from './components/admin/ProductManager';
+import AdminInventoryLogs  from './components/admin/AdminInventoryLogs';
 function App() {
   const [userType, setUserType] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -82,6 +83,8 @@ function App() {
           )
           }
         />
+        <Route path="/admin/inventory-logs" element={<AdminInventoryLogs />} />
+
       </Routes>
     </Router>
   );
