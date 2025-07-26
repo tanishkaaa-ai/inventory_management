@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 
+import React, { useEffect, useState } from 'react';
+import { Package, Plus, Edit3, Trash2, TrendingDown, TrendingUp, AlertTriangle, Calendar, Barcode, Tag, Archive } from 'lucide-react';
+import axios from 'axios';
 const initialForm = {
   sku: '',
   name: '',
@@ -24,8 +25,8 @@ export default function ProductManager() {
 
   const fetchProducts = async () => {
     try {
-      const res = await axios.get('/product'); // ✅ Backend: GET /product
-      setProducts(res.data);
+       const res = await axios.get('/product');
+       setProducts(res.data);
     } catch (err) {
       setError('Failed to fetch products');
     }
@@ -39,9 +40,9 @@ export default function ProductManager() {
     e.preventDefault();
     try {
       if (editingId) {
-        await axios.put(`/product/update/${editingId}`, formData); // ✅ PUT /product/update/:id
+    await axios.put(`/product/update/${editingId}`, formData);
       } else {
-        await axios.post('/product/create', formData); // ✅ POST /product/create
+       await axios.post('/product/create', formData);
       }
       setFormData(initialForm);
       setEditingId(null);
@@ -58,7 +59,7 @@ export default function ProductManager() {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`/product/delete/${id}`); // ✅ DELETE /product/delete/:id
+       await axios.delete(`/product/delete/${id}`);
       fetchProducts();
     } catch (err) {
       setError('Failed to delete product');
@@ -69,87 +70,360 @@ export default function ProductManager() {
     const quantity = parseInt(prompt('Enter quantity:'), 10);
     if (!quantity || quantity <= 0) return;
     try {
-      await axios.put('/product/updateStock', { sku, action, quantity }); // ✅ PUT /product/updateStock
+    await axios.put('/product/updateStock', { sku, action, quantity });
       fetchProducts();
     } catch (err) {
       setError(err.response?.data || 'Stock update failed');
     }
   };
 
+  const getStockStatus = (stock, threshold) => {
+    if (stock === 0) return { color: 'text-red-600', bg: 'bg-red-50', icon: AlertTriangle, label: 'Out of Stock' };
+    if (stock < threshold) return { color: 'text-orange-600', bg: 'bg-orange-50', icon: AlertTriangle, label: 'Low Stock' };
+    return { color: 'text-green-600', bg: 'bg-green-50', icon: Package, label: 'In Stock' };
+  };
+
+  const isExpiringSoon = (expiryDate) => {
+    const today = new Date();
+    const expiry = new Date(expiryDate);
+    const diffTime = expiry - today;
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    return diffDays <= 30;
+  };
+
   return (
-    <div className="p-6 max-w-5xl mx-auto">
-      <h1 className="text-3xl font-bold mb-6">Product Management</h1>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
+      <div className="p-8 max-w-7xl mx-auto">
+        {/* Header */}
+        <div className="mb-8">
+          <div className="flex items-center gap-3 mb-2">
+            <div className="p-3 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl shadow-lg">
+              <Package className="w-8 h-8 text-white" />
+            </div>
+            <div>
+              <h1 className="text-4xl font-bold bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent">
+                Product Management
+              </h1>
+              <p className="text-gray-600 mt-1">Manage your inventory with ease</p>
+            </div>
+          </div>
+          
+          {/* Stats Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-6">
+            <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-gray-600">Total Products</p>
+                  <p className="text-2xl font-bold text-gray-900">{products.length}</p>
+                </div>
+                <Archive className="w-8 h-8 text-blue-600" />
+              </div>
+            </div>
+            <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-gray-600">Low Stock</p>
+                  <p className="text-2xl font-bold text-orange-600">
+                    {products.filter(p => p.stock < p.threshold).length}
+                  </p>
+                </div>
+                <AlertTriangle className="w-8 h-8 text-orange-600" />
+              </div>
+            </div>
+            <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-gray-600">Out of Stock</p>
+                  <p className="text-2xl font-bold text-red-600">
+                    {products.filter(p => p.stock === 0).length}
+                  </p>
+                </div>
+                <TrendingDown className="w-8 h-8 text-red-600" />
+              </div>
+            </div>
+            <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-gray-600">Expiring Soon</p>
+                  <p className="text-2xl font-bold text-purple-600">
+                    {products.filter(p => isExpiringSoon(p.expiryDate)).length}
+                  </p>
+                </div>
+                <Calendar className="w-8 h-8 text-purple-600" />
+              </div>
+            </div>
+          </div>
+        </div>
 
-      {error && <div className="text-red-500 mb-4">{error}</div>}
+        {error && (
+          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl flex items-center gap-3">
+            <AlertTriangle className="w-5 h-5 text-red-600" />
+            <span className="text-red-700">{error}</span>
+            <button 
+              onClick={() => setError('')}
+              className="ml-auto text-red-500 hover:text-red-700"
+            >
+              ×
+            </button>
+          </div>
+        )}
 
-      <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-4 mb-8">
-        {Object.keys(initialForm).map((key) => (
-          <input
-            key={key}
-            type={key === 'expiryDate' ? 'date' : 'text'}
-            name={key}
-            placeholder={key}
-            value={formData[key]}
-            onChange={handleChange}
-            className="border p-2 rounded"
-            required
-          />
-        ))}
-        <button
-          type="submit"
-          className="col-span-2 bg-blue-600 text-white p-2 rounded hover:bg-blue-700"
-        >
-          {editingId ? 'Update Product' : 'Create Product'}
-        </button>
-      </form>
+        {/* Form */}
+        <div className="bg-white rounded-2xl shadow-xl border border-gray-200 p-8 mb-8">
+          <div className="flex items-center gap-3 mb-6">
+            <Plus className="w-6 h-6 text-blue-600" />
+            <h2 className="text-2xl font-bold text-gray-800">
+              {editingId ? 'Update Product' : 'Add New Product'}
+            </h2>
+          </div>
 
-      <h2 className="text-2xl font-semibold mb-2">Product List</h2>
+          <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="space-y-2">
+              <label className="flex items-center gap-2 text-sm font-medium text-gray-700">
+                <Tag className="w-4 h-4" />
+                SKU
+              </label>
+              <input
+                type="text"
+                name="sku"
+                placeholder="Enter SKU"
+                value={formData.sku}
+                onChange={handleChange}
+                className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                required
+              />
+            </div>
 
-      {products.length === 0 ? (
-        <p>No products available.</p>
-      ) : (
-        <table className="w-full border text-sm">
-          <thead>
-            <tr className="bg-gray-100 text-left">
-              <th className="p-2">SKU</th>
-              <th className="p-2">Name</th>
-              <th className="p-2">Category</th>
-              <th className="p-2">Stock</th>
-              <th className="p-2">Threshold</th>
-              <th className="p-2">Expiry</th>
-              <th className="p-2">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {products.map((p) => (
-              <tr key={p._id} className="border-t hover:bg-gray-50">
-                <td className="p-2">{p.sku}</td>
-                <td className="p-2">{p.name}</td>
-                <td className="p-2">{p.category}</td>
-                <td className={`p-2 ${p.stock < p.threshold ? 'text-red-600' : ''}`}>
-                  {p.stock}
-                </td>
-                <td className="p-2">{p.threshold}</td>
-                <td className="p-2">{p.expiryDate?.split('T')[0]}</td>
-                <td className="p-2 space-x-2">
-                  <button onClick={() => handleEdit(p)} className="text-blue-500 hover:underline">
-                    Edit
-                  </button>
-                  <button onClick={() => handleDelete(p._id)} className="text-red-500 hover:underline">
-                    Delete
-                  </button>
-                  <button onClick={() => handleStockUpdate(p.sku, 'sale')} className="text-yellow-600 hover:underline">
-                    Sale
-                  </button>
-                  <button onClick={() => handleStockUpdate(p.sku, 'restock')} className="text-green-600 hover:underline">
-                    Restock
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
+            <div className="space-y-2">
+              <label className="flex items-center gap-2 text-sm font-medium text-gray-700">
+                <Package className="w-4 h-4" />
+                Product Name
+              </label>
+              <input
+                type="text"
+                name="name"
+                placeholder="Enter product name"
+                value={formData.name}
+                onChange={handleChange}
+                className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                required
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="flex items-center gap-2 text-sm font-medium text-gray-700">
+                <Barcode className="w-4 h-4" />
+                Barcode
+              </label>
+              <input
+                type="text"
+                name="barcode"
+                placeholder="Enter barcode"
+                value={formData.barcode}
+                onChange={handleChange}
+                className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                required
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-gray-700">Category</label>
+              <input
+                type="text"
+                name="category"
+                placeholder="Enter category"
+                value={formData.category}
+                onChange={handleChange}
+                className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                required
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-gray-700">Stock Quantity</label>
+              <input
+                type="text"
+                name="stock"
+                placeholder="Enter stock quantity"
+                value={formData.stock}
+                onChange={handleChange}
+                className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                required
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-gray-700">Threshold</label>
+              <input
+                type="text"
+                name="threshold"
+                placeholder="Enter threshold"
+                value={formData.threshold}
+                onChange={handleChange}
+                className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                required
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="flex items-center gap-2 text-sm font-medium text-gray-700">
+                <Calendar className="w-4 h-4" />
+                Expiry Date
+              </label>
+              <input
+                type="date"
+                name="expiryDate"
+                value={formData.expiryDate}
+                onChange={handleChange}
+                className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                required
+              />
+            </div>
+
+            <div className="flex items-end gap-4">
+              <button
+                type="submit"
+                className="flex-1 bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-3 px-6 rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 font-medium"
+              >
+                <div className="flex items-center justify-center gap-2">
+                  <Plus className="w-5 h-5" />
+                  {editingId ? 'Update Product' : 'Add Product'}
+                </div>
+              </button>
+              {editingId && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setFormData(initialForm);
+                    setEditingId(null);
+                  }}
+                  className="px-6 py-3 bg-gray-200 text-gray-700 font-medium rounded-xl hover:bg-gray-300 transition-all"
+                >
+                  Cancel
+                </button>
+              )}
+            </div>
+          </form>
+        </div>
+
+        {/* Product List */}
+        <div className="bg-white rounded-2xl shadow-xl border border-gray-200 overflow-hidden">
+          <div className="p-6 border-b border-gray-200">
+            <h2 className="text-2xl font-bold text-gray-800 flex items-center gap-3">
+              <Archive className="w-6 h-6 text-blue-600" />
+              Product Inventory
+            </h2>
+          </div>
+
+          {products.length === 0 ? (
+            <div className="p-12 text-center">
+              <Package className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+              <p className="text-gray-500 text-lg">No products available</p>
+              <p className="text-gray-400">Add your first product to get started</p>
+            </div>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Product Details</th>
+                    <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
+                    <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Stock Status</th>
+                    <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Expiry Date</th>
+                    <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-200">
+                  {products.map((p) => {
+                    const stockStatus = getStockStatus(p.stock, p.threshold);
+                    const isExpiring = isExpiringSoon(p.expiryDate);
+                    
+                    return (
+                      <tr key={p._id} className="hover:bg-gray-50 transition-colors">
+                        <td className="px-6 py-4">
+                          <div className="flex items-center gap-3">
+                            <div className="p-2 bg-blue-100 rounded-lg">
+                              <Package className="w-5 h-5 text-blue-600" />
+                            </div>
+                            <div>
+                              <div className="font-medium text-gray-900">{p.name}</div>
+                              <div className="text-sm text-gray-500">SKU: {p.sku}</div>
+                              <div className="text-xs text-gray-400">Barcode: {p.barcode}</div>
+                            </div>
+                          </div>
+                        </td>
+                        <td className="px-6 py-4">
+                          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                            {p.category}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4">
+                          <div className={`inline-flex items-center gap-2 px-3 py-2 rounded-lg ${stockStatus.bg}`}>
+                            <stockStatus.icon className={`w-4 h-4 ${stockStatus.color}`} />
+                            <div>
+                              <div className={`font-medium ${stockStatus.color}`}>
+                                {p.stock} units
+                              </div>
+                              <div className="text-xs text-gray-500">
+                                Threshold: {p.threshold}
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+                        <td className="px-6 py-4">
+                          <div className={`flex items-center gap-2 ${isExpiring ? 'text-red-600' : 'text-gray-600'}`}>
+                            <Calendar className="w-4 h-4" />
+                            <div>
+                              <div className="font-medium">{p.expiryDate?.split('T')[0]}</div>
+                              {isExpiring && (
+                                <div className="text-xs text-red-500 font-medium">Expiring Soon!</div>
+                              )}
+                            </div>
+                          </div>
+                        </td>
+                        <td className="px-6 py-4">
+                          <div className="flex items-center gap-2">
+                            <button
+                              onClick={() => handleEdit(p)}
+                              className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                              title="Edit Product"
+                            >
+                              <Edit3 className="w-4 h-4" />
+                            </button>
+                            <button
+                              onClick={() => handleDelete(p._id)}
+                              className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                              title="Delete Product"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </button>
+                            <button
+                              onClick={() => handleStockUpdate(p.sku, 'sale')}
+                              className="px-3 py-1 text-xs font-medium text-orange-700 bg-orange-100 hover:bg-orange-200 rounded-lg transition-colors flex items-center gap-1"
+                              title="Record Sale"
+                            >
+                              <TrendingDown className="w-3 h-3" />
+                              Sale
+                            </button>
+                            <button
+                              onClick={() => handleStockUpdate(p.sku, 'restock')}
+                              className="px-3 py-1 text-xs font-medium text-green-700 bg-green-100 hover:bg-green-200 rounded-lg transition-colors flex items-center gap-1"
+                              title="Restock"
+                            >
+                              <TrendingUp className="w-3 h-3" />
+                              Restock
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
 }

@@ -1,13 +1,34 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
-const AdminDashboard = ({onLogout}) => {
+const AdminDashboard = ({ onLogout }) => {
   const navigate = useNavigate();
 
-   const handleLogout = () => {
-    onLogout(); // resets state in App.jsx
-    navigate('/'); // navigate back to Home
+  const [stats, setStats] = useState({
+    totalProducts: 0,
+    staffCount: 0,
+    lowStockCount: 0,
+  });
+
+  const handleLogout = () => {
+    onLogout();
+    navigate('/');
   };
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const res = await axios.get('/admin/stats');
+        setStats(res.data);
+      } catch (err) {
+        console.error('Failed to fetch stats:', err.message);
+      }
+    };
+
+    fetchStats();
+  }, []);
+
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col">
       {/* Top Navbar */}
@@ -47,15 +68,15 @@ const AdminDashboard = ({onLogout}) => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <div className="bg-white p-6 rounded-xl shadow border-l-4 border-blue-500">
               <h3 className="text-lg font-semibold text-gray-700">Total Products</h3>
-              <p className="text-3xl font-bold text-blue-600 mt-2">120</p>
+              <p className="text-3xl font-bold text-blue-600 mt-2">{stats.totalProducts}</p>
             </div>
             <div className="bg-white p-6 rounded-xl shadow border-l-4 border-green-500">
               <h3 className="text-lg font-semibold text-gray-700">Staff Users</h3>
-              <p className="text-3xl font-bold text-green-600 mt-2">15</p>
+              <p className="text-3xl font-bold text-green-600 mt-2">{stats.staffCount}</p>
             </div>
             <div className="bg-white p-6 rounded-xl shadow border-l-4 border-yellow-500">
               <h3 className="text-lg font-semibold text-gray-700">Low Stock Alerts</h3>
-              <p className="text-3xl font-bold text-yellow-600 mt-2">5</p>
+              <p className="text-3xl font-bold text-yellow-600 mt-2">{stats.lowStockCount}</p>
             </div>
           </div>
         </main>

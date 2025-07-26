@@ -2,6 +2,9 @@ const adminModel = require("../models/admin-model");
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { generateToken } = require("../utils/generateToken");
+const Product = require('../models/product-model');
+const productModel = require("../models/product-model");
+const staffModel = require("../models/staff-model");
 
 module.exports.registerAdmin = async function(req, res){
     try{
@@ -50,4 +53,18 @@ module.exports.loginAdmin = async function(req, res){
             res.send("Email or Password incorrect");
         }
     })
+};
+
+exports.getStats = async (req, res) => {
+  try {
+    const totalProducts = await productModel.countDocuments();
+    const staffCount = await staffModel.countDocuments();
+     const lowStockCount = await productModel.countDocuments({
+      $expr: { $lt: ["$stock", "$threshold"] }
+    });
+
+    res.json({ totalProducts, staffCount, lowStockCount });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 };
