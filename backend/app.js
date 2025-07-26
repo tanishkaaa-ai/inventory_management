@@ -13,6 +13,7 @@ app.use(cors({
   origin: 'http://localhost:3000', // frontend URL
   credentials: true
 }));
+app.use(express.json());
 const indexRoutes = require("./routes/index");
 const staffrouter = require("./routes/staffRouter");
 const adminrouter = require("./routes/adminRouter");

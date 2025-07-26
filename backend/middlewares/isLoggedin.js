@@ -7,7 +7,7 @@ module.exports = async function(req, res, next){
     }
 
     try{
-        let decoded = jwt.verify(res.cookies.token, process.env.JWT_KEY);
+        let decoded = jwt.verify(req.cookies.token, process.env.JWT_KEY);
         let user = await staffModel
             .findOne({email: decoded.email})
             .select("-password"); //remove the password field
