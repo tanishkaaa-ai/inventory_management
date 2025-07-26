@@ -8,6 +8,8 @@ const {
   updateStock,
 } = require('../controllers/productController');
 
+const { getLogs } = require("../controllers/productController");
+
 // Auth middleware (write your own)
 const isAuthenticated = require('../middlewares/isLoggedin');
 const isAdmin = require('../middlewares/isLoggedinadmin');
@@ -17,5 +19,7 @@ router.post('/create', isAdmin, createProduct);
 router.put('/update/:id', isAdmin, updateProduct);
 router.delete('/delete/:id', isAdmin, deleteProduct);
 router.put("/updateStock", isAdmin, updateStock);
+
+router.get("/logs", isAdmin, getLogs);
 
 module.exports = router;

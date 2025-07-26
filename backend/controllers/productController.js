@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const productModel = require("../models/product-model");
+const inventoryLogModel = require("../models/inventoryLog-model");
 
 // Get all products
 module.exports.getAllProducts = async function (req, res) {
@@ -71,12 +72,13 @@ module.exports.deleteProduct = async function (req, res) {
 module.exports.updateStock = async function (req, res) {
     try {
         const { sku, action, quantity } = req.body;
+        const userId = req.user._id; // assumes you have middleware setting req.user
 
         if (!sku || !action || typeof quantity !== "number" || quantity < 0) {
             return res.status(400).send("Invalid request data");
         }
 
-        let product = await productModel.findOne({ sku });
+        const product = await productModel.findOne({ sku });
         if (!product) return res.status(404).send("Product not found");
 
         switch (action) {
@@ -95,7 +97,26 @@ module.exports.updateStock = async function (req, res) {
         }
 
         await product.save();
-        res.send("Stock updated successfully");
+
+        // Log the action
+        await inventoryLogModel.create({
+            product: product._id,
+            action: action === "sale" ? "remove" : "add",
+            quantity,
+            userId,
+            remarks: `Stock ${action} by ${userId}`
+        });
+
+        res.send("Stock updated and action logged successfully");
+    } catch (err) {
+        res.status(500).send(err.message);
+    }
+};
+
+module.exports.getLogs = async function (req, res) {
+    try {
+        const logs = await inventoryLogModel.find().populate("product").populate("userId").sort({ timestamp: -1 });
+        res.json(logs);   ///need to fix this
     } catch (err) {
         res.status(500).send(err.message);
     }
