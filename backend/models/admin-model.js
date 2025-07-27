@@ -6,12 +6,9 @@ const adminSchema = mongoose.Schema({
     password: { type: String, required: true },
     createdAt: { type: Date, default: Date.now },
     isActive: { type: Boolean, default: true },
-    notifyOnLowStock: { type: Boolean, default: true },  // New field
-    notificationFrequency: {
-        type: String,
-        enum: ["immediate", "daily", "never"],
-        default: "immediate"
-    }
+    notificationPreferences: {
+        lowStock: { type: Boolean, default: true },
+    },
 })
 
 module.exports = mongoose.model("admin", adminSchema);

@@ -6,12 +6,9 @@ const staffSchema = new mongoose.Schema({
     password: { type: String, required: true }, // Hashed
     createdAt: { type: Date, default: Date.now },
     isActive: { type: Boolean, default: true },
-    notifyOnLowStock: { type: Boolean, default: true },
-    notificationFrequency: {
-        type: String,
-        enum: ["immediate", "daily", "never"],
-        default: "immediate"
-    }
+    notificationPreferences: {
+        lowStock: { type: Boolean, default: true },
+    },
 
 });
 
