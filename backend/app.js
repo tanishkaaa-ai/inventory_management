@@ -18,6 +18,7 @@ const indexRoutes = require("./routes/index");
 const staffrouter = require("./routes/staffRouter");
 const adminrouter = require("./routes/adminRouter");
 const productrouter = require("./routes/productRouter");
+const logrouter = require("./routes/logRouter");
 
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
@@ -39,6 +40,7 @@ app.use("/", indexRoutes);
 app.use("/staff",staffrouter);
 app.use("/admin",adminrouter);
 app.use("/product",productrouter);
+app.use("/log",logrouter);
 
 app.listen(5000, () => {
     console.log("server running on port 5000");

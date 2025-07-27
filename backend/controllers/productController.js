@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const productModel = require("../models/product-model");
+const Product = require("../models/product-model");
 const inventoryLogModel = require("../models/inventoryLog-model");
 const notificationPreferenceModel = require("../models/notiPref-model");
 const { sendLowStockAlert } = require("../utils/emailService");

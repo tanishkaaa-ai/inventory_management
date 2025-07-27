@@ -34,7 +34,7 @@ router.get("/aggregate/recent", isLoggedInAny, recents);
 
 router.get("/logs", isAdmin, getLogs);
 
-router.get('/export/excel', exportToExcel);
+router.get('/export/excel', isLoggedInAny, exportToExcel);
 router.get('/export/pdf', isLoggedInAny, exportToPDF);
 
 module.exports = router;
