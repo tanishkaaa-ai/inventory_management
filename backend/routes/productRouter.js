@@ -14,11 +14,13 @@ const { getLogs } = require("../controllers/productController");
 const isAuthenticated = require('../middlewares/isLoggedin');
 const isAdmin = require('../middlewares/isLoggedinadmin');
 
-router.get('/', isAuthenticated, isAdmin, getAllProducts);
+const isLoggedInAny = require('../middlewares/isLoggedInAny');
+
+router.get('/', isLoggedInAny, getAllProducts);
 router.post('/create', isAdmin, createProduct);
 router.put('/update/:id', isAdmin, updateProduct);
 router.delete('/delete/:id', isAdmin, deleteProduct);
-router.put("/updateStock", isAdmin, updateStock);
+router.put("/updateStock", isLoggedInAny, updateStock);
 
 router.get("/logs", isAdmin, getLogs);
 
