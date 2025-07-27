@@ -158,3 +158,50 @@ Timestamp: ${new Date(log.timestamp).toLocaleString()}
         res.status(500).send(err.message);
     }
 };
+
+module.exports.search = async function(req, res){
+    const query = req.query.q;
+    const regex = new RegExp(query, 'i'); // case-insensitive
+
+    const results = await Product.find({
+        $or: [{ name: regex }, { barcode: regex }, { category: regex }],
+    });
+
+    res.json(results);
+};
+
+module.exports.aggregateCategory = async function(req, res){
+    const result = await Product.aggregate([
+      { $group: { _id: "$category", count: { $sum: 1 } } }
+    ]);
+    res.json(result);
+};
+  
+
+module.exports.aggregateLowStock = async function(req, res) {
+    try {
+      const allProducts = await Product.find(); // Get all products
+  
+      const lowStock = allProducts.filter(product =>
+        product.quantity < product.Threshold
+      );
+  
+      res.json({
+        count: lowStock.length,
+        items: lowStock
+      });
+    } catch (err) {
+      res.status(500).json({ error: "Server error" });
+    }
+ };
+  
+  
+module.exports.recents  = async function(req, res){
+    const oneWeekAgo = new Date();
+    oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+  
+    const recent = await Product.find({ updatedAt: { $gte: oneWeekAgo } });
+    res.json(recent);
+};
+
+
