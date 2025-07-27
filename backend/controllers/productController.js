@@ -5,6 +5,7 @@ const inventoryLogModel = require("../models/inventoryLog-model");
 const notificationPreferenceModel = require("../models/notiPref-model");
 const { sendLowStockAlert } = require("../utils/emailService");
 const adminModel = require('../models/admin-model');
+const productModel = require("../models/product-model");
 // Get all products
 module.exports.getAllProducts = async function (req, res) {
     try {
