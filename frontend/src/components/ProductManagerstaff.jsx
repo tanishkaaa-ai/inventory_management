@@ -17,6 +17,9 @@ export default function ProductManager() {
 
   const [error, setError] = useState('');
 
+  const [searchQuery, setSearchQuery] = useState('');
+const [categoryFilter, setCategoryFilter] = useState('');
+
   // Fetch products on page load
   useEffect(() => {
     fetchProducts();
@@ -60,6 +63,20 @@ export default function ProductManager() {
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     return diffDays <= 30;
   };
+  const filteredProducts = products.filter((p) => {
+  const query = searchQuery.toLowerCase();
+  const matchesSearch =
+    p.name.toLowerCase().includes(query) ||
+    p.sku.toLowerCase().includes(query) ||
+    p.barcode.toLowerCase().includes(query);
+
+  const matchesCategory = categoryFilter ? p.category === categoryFilter : true;
+
+  return matchesSearch && matchesCategory;
+});
+
+// 📦 Unique categories for filter dropdown
+const uniqueCategories = [...new Set(products.map((p) => p.category))];
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
@@ -125,6 +142,26 @@ export default function ProductManager() {
           </div>
         </div>
 
+        <div className="flex flex-col md:flex-row items-start md:items-center gap-4 mb-6">
+  <input
+    type="text"
+    placeholder="Search by name, SKU, or barcode"
+    value={searchQuery}
+    onChange={(e) => setSearchQuery(e.target.value)}
+    className="flex-1 border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+  />
+
+  <select
+    value={categoryFilter}
+    onChange={(e) => setCategoryFilter(e.target.value)}
+    className="border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+  >
+    <option value="">All Categories</option>
+    {uniqueCategories.map((cat) => (
+      <option key={cat} value={cat}>{cat}</option>
+    ))}
+  </select>
+</div>
         {error && (
           <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl flex items-center gap-3">
             <AlertTriangle className="w-5 h-5 text-red-600" />
@@ -151,7 +188,7 @@ export default function ProductManager() {
             </h2>
           </div>
 
-          {products.length === 0 ? (
+          {filteredProducts.length === 0 ? (
             <div className="p-12 text-center">
               <Package className="w-16 h-16 text-gray-300 mx-auto mb-4" />
               <p className="text-gray-500 text-lg">No products available</p>
@@ -170,7 +207,7 @@ export default function ProductManager() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200">
-                  {products.map((p) => {
+                  {filteredProducts.map((p) => {
                     const stockStatus = getStockStatus(p.stock, p.threshold);
                     const isExpiring = isExpiringSoon(p.expiryDate);
                     
