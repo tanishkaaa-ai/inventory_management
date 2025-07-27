@@ -35,8 +35,12 @@ exports.sendLowStockAlerts = async (req, res) => {
       await transporter.sendMail(mailOptions);
     }
 
-    res.status(200).send("Low stock emails sent");
-  } catch (err) {
+    return res.status(200).json({ 
+      message: "Stock updated and notification sent", 
+      notificationSent: true 
+    })
+  }
+  catch (err) {
     res.status(500).send("Failed to send alerts: " + err.message);
   }
 };

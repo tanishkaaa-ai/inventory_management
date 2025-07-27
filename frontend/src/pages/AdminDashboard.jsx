@@ -2,6 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { LogOut, Users, Package, AlertTriangle, Settings, FileText, BarChart3, Activity, Navigation, Menu, X } from 'lucide-react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import useStats from "../hooks/useStats";
+import StockDistributionChart from "../components/admin/charts/StockDistributionChart";
+import LowStockItemsChart from "../components/admin/charts/LowStockItemsChart";
+import RecentUpdatesChart from "../components/admin/charts/RecentUpdatesChart";
+
 const AdminDashboard = ({ onLogout }) => {
   const navigate = useNavigate();
   
