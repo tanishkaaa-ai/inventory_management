@@ -2,13 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { LogOut, Users, Package, AlertTriangle, Settings, FileText, BarChart3, Activity, Navigation, Menu, X } from 'lucide-react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import useStats from "../hooks/useStats";
-import StockDistributionChart from "../components/admin/charts/StockDistributionChart";
-import LowStockItemsChart from "../components/admin/charts/LowStockItemsChart";
-import RecentUpdatesChart from "../components/admin/charts/RecentUpdatesChart";
+import useStats from "@/hooks/useStats";
+import StockDistributionChart from "@/components/admin/charts/StockDistributionChart";
+import LowStockChart from "@/components/admin/charts/LowStockChart";
+import RecentUpdatesChart from "@/components/admin/charts/RecentUpdatesChart";
 
 const AdminDashboard = ({ onLogout }) => {
   const navigate = useNavigate();
+  const { data, isLoading, error } = useStats();
+
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error loading stats</div>;
   
   const handleNavigate = (path) => {
     console.log('Navigate to:', path);
@@ -128,6 +132,15 @@ const AdminDashboard = ({ onLogout }) => {
             </nav>
           </div>
         </aside>
+
+        <div className="p-4">
+          <h1 className="text-xl font-bold mb-4">Inventory Insights</h1>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <StockDistributionChart data={data.categoryData} />
+            <LowStockChart data={data.lowStockItems} />
+            <RecentUpdatesChart data={data.recentUpdates} />
+          </div>
+        </div>
 
         {/* Main Content */}
         <main className="flex-1 p-8">
