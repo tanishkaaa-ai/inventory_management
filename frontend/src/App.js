@@ -68,7 +68,7 @@ function App() {
           path="/staff"
           element={
             isAuthenticated && userType === 'staff' ? (
-              <StaffDashboard />
+              <StaffDashboard onLogout={handleLogout}/>
             ) : (
               <Navigate to="/" />
             )
