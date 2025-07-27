@@ -4,6 +4,7 @@ const { exportLogsExcel, exportLogsPDF } = require("../controllers/exportControl
 const isLoggedInAny = require("../middlewares/isLoggedInAny");
 
 // Export Inventory Logs
+
 router.get("/export/excel", isLoggedInAny, exportLogsExcel);
 router.get("/export/pdf", isLoggedInAny, exportLogsPDF);
 

@@ -149,4 +149,5 @@ module.exports.exportLogsPDF = async function (req, res) {
       error: err.message,
     });
   }
+  
 };

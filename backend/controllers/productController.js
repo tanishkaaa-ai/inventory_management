@@ -70,7 +70,7 @@ module.exports.deleteProduct = async function (req, res) {
     }
 };
 
-
+//
 module.exports.updateStock = async function (req, res) {
     try {
         const { sku, action, quantity } = req.body;
@@ -118,7 +118,6 @@ module.exports.updateStock = async function (req, res) {
                 }
             }
         }
-
 
         res.send("Stock updated and action logged successfully");
     } catch (err) {
