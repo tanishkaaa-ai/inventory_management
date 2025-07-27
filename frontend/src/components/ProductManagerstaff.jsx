@@ -14,8 +14,7 @@ const initialForm = {
 
 export default function ProductManager() {
   const [products, setProducts] = useState([]);
-  const [formData, setFormData] = useState(initialForm);
-  const [editingId, setEditingId] = useState(null);
+
   const [error, setError] = useState('');
 
   // Fetch products on page load
