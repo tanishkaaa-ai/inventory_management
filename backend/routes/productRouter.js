@@ -22,6 +22,8 @@ const isAdmin = require('../middlewares/isLoggedinadmin');
 
 const isLoggedInAny = require('../middlewares/isLoggedInAny');
 
+const { exportLogsExcel, exportLogsPDF } = require("../controllers/exportController");
+const isLoggedinadmin = require("../middlewares/isLoggedinadmin");
 router.get('/', isLoggedInAny, getAllProducts);
 router.post('/create', isAdmin, createProduct);
 router.put('/update/:id', isAdmin, updateProduct);
@@ -37,4 +39,7 @@ router.get("/logs", isAdmin, getLogs);
 router.get('/export/excel', isLoggedInAny, exportToExcel);
 router.get('/export/pdf', isLoggedInAny, exportToPDF);
 
+
+router.get("/log/export/excel", isLoggedinadmin, exportLogsExcel);
+router.get("/log/export/pdf",isLoggedinadmin, exportLogsPDF);
 module.exports = router;

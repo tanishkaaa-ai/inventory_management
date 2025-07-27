@@ -94,7 +94,16 @@ function App() {
           )
           }
         />
-        <Route path="/admin/inventory-logs" element={<AdminInventoryLogs />} />
+        <Route
+  path="/admin/inventory-logs"
+  element={
+    isAuthenticated && userType === 'admin' ? (
+      <AdminInventoryLogs />
+    ) : (
+      <Navigate to="/" />
+    )
+  }
+/>
 
       </Routes>
     </Router>

@@ -360,6 +360,21 @@ const uniqueCategories = [...new Set(products.map((p) => p.category))];
             </div>
           ) : (
             <div className="overflow-x-auto">
+              <div className="flex justify-end gap-3 mt-4">
+  <button
+    onClick={() => window.open('http://localhost:5000/product/export/pdf', '_blank')}
+    className="bg-red-600 text-white px-4 py-2 rounded-xl hover:bg-red-700 transition-all text-sm font-medium"
+  >
+    Export PDF
+  </button>
+  <button
+    onClick={() => window.open('http://localhost:5000/product/export/excel', '_blank')}
+    className="bg-green-600 text-white px-4 py-2 rounded-xl hover:bg-green-700 transition-all text-sm font-medium"
+  >
+    Export Excel
+  </button>
+</div>
+
               <table className="w-full">
                 <thead className="bg-gray-50">
                   <tr>

@@ -193,6 +193,7 @@ const AdminInventoryLogs = () => {
           </div>
         </div>
 
+
         {/* Logs Table */}
         <div className="bg-white rounded-2xl shadow-xl border border-gray-200 overflow-hidden">
           <div className="p-6 border-b border-gray-200">
@@ -209,6 +210,21 @@ const AdminInventoryLogs = () => {
 
           {filteredLogs.length > 0 ? (
             <div className="overflow-x-auto">
+              <div className="flex justify-end gap-3 mb-4">
+  <button
+    onClick={() => window.open('http://localhost:5000/product/log/export/pdf', '_blank')}
+    className="bg-red-600 text-white px-4 py-2 rounded-xl hover:bg-red-700 transition-all text-sm font-medium"
+  >
+    Export PDF
+  </button>
+  <button
+    onClick={() => window.open('http://localhost:5000/product/log/export/excel', '_blank')}
+    className="bg-green-600 text-white px-4 py-2 rounded-xl hover:bg-green-700 transition-all text-sm font-medium"
+  >
+    Export Excel
+  </button>
+</div>
+
               <table className="w-full">
                 <thead className="bg-gray-50">
                   <tr>

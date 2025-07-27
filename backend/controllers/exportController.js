@@ -21,7 +21,15 @@ exports.exportToExcel = async (req, res) => {
       { header: 'Low Stock Threshold', key: 'threshold' },
     ];
 
-    products.forEach(p => sheet.addRow(p));
+   products.forEach(p => {
+  sheet.addRow({
+    name: p.name,
+    category: p.category,
+    stock: p.stock,
+    barcode: p.barcode,
+    threshold: p.threshold, // this is the correct field
+  });
+})
 
     res.setHeader(
       'Content-Type',
@@ -54,7 +62,7 @@ module.exports.exportToPDF = async function (req, res) {
 
     products.forEach(p => {
       doc.fontSize(12).text(
-        `Name: ${p.name} | Category: ${p.category} | Qty: ${p.stock} | Barcode: ${p.barcode} | Threshold: ${p.lowStockThreshold}`
+        `Name: ${p.name} | Category: ${p.category} | Qty: ${p.stock} | Barcode: ${p.barcode} | Threshold: ${p.threshold}`
       );
     });
 
