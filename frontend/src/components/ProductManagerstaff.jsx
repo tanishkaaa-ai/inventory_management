@@ -14,8 +14,7 @@ const initialForm = {
 
 export default function ProductManager() {
   const [products, setProducts] = useState([]);
-  const [formData, setFormData] = useState(initialForm);
-  const [editingId, setEditingId] = useState(null);
+
   const [error, setError] = useState('');
 
   const [searchQuery, setSearchQuery] = useState('');
@@ -35,39 +34,10 @@ const [categoryFilter, setCategoryFilter] = useState('');
     }
   };
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      if (editingId) {
-    await axios.put(`/product/update/${editingId}`, formData);
-      } else {
-       await axios.post('/product/create', formData);
-      }
-      setFormData(initialForm);
-      setEditingId(null);
-      fetchProducts();
-    } catch (err) {
-      setError(err.response?.data || 'Error submitting form');
-    }
-  };
+  
 
-  const handleEdit = (product) => {
-    setFormData(product);
-    setEditingId(product._id);
-  };
-
-  const handleDelete = async (id) => {
-    try {
-       await axios.delete(`/product/delete/${id}`);
-      fetchProducts();
-    } catch (err) {
-      setError('Failed to delete product');
-    }
-  };
+ 
 
   const handleStockUpdate = async (sku, action) => {
     const quantity = parseInt(prompt('Enter quantity:'), 10);
@@ -93,7 +63,7 @@ const [categoryFilter, setCategoryFilter] = useState('');
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     return diffDays <= 30;
   };
-const filteredProducts = products.filter((p) => {
+  const filteredProducts = products.filter((p) => {
   const query = searchQuery.toLowerCase();
   const matchesSearch =
     p.name.toLowerCase().includes(query) ||
@@ -107,6 +77,7 @@ const filteredProducts = products.filter((p) => {
 
 // 📦 Unique categories for filter dropdown
 const uniqueCategories = [...new Set(products.map((p) => p.category))];
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
       <div className="p-8 max-w-7xl mx-auto">
@@ -171,8 +142,7 @@ const uniqueCategories = [...new Set(products.map((p) => p.category))];
           </div>
         </div>
 
-
-      <div className="flex flex-col md:flex-row items-start md:items-center gap-4 mb-6">
+        <div className="flex flex-col md:flex-row items-start md:items-center gap-4 mb-6">
   <input
     type="text"
     placeholder="Search by name, SKU, or barcode"
@@ -206,142 +176,8 @@ const uniqueCategories = [...new Set(products.map((p) => p.category))];
         )}
 
         {/* Form */}
-        <div className="bg-white rounded-2xl shadow-xl border border-gray-200 p-8 mb-8">
-          <div className="flex items-center gap-3 mb-6">
-            <Plus className="w-6 h-6 text-blue-600" />
-            <h2 className="text-2xl font-bold text-gray-800">
-              {editingId ? 'Update Product' : 'Add New Product'}
-            </h2>
-          </div>
+        
 
-          <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div className="space-y-2">
-              <label className="flex items-center gap-2 text-sm font-medium text-gray-700">
-                <Tag className="w-4 h-4" />
-                SKU
-              </label>
-              <input
-                type="text"
-                name="sku"
-                placeholder="Enter SKU"
-                value={formData.sku}
-                onChange={handleChange}
-                className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
-                required
-              />
-            </div>
-
-            <div className="space-y-2">
-              <label className="flex items-center gap-2 text-sm font-medium text-gray-700">
-                <Package className="w-4 h-4" />
-                Product Name
-              </label>
-              <input
-                type="text"
-                name="name"
-                placeholder="Enter product name"
-                value={formData.name}
-                onChange={handleChange}
-                className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
-                required
-              />
-            </div>
-
-            <div className="space-y-2">
-              <label className="flex items-center gap-2 text-sm font-medium text-gray-700">
-                <Barcode className="w-4 h-4" />
-                Barcode
-              </label>
-              <input
-                type="text"
-                name="barcode"
-                placeholder="Enter barcode"
-                value={formData.barcode}
-                onChange={handleChange}
-                className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
-                required
-              />
-            </div>
-
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-700">Category</label>
-              <input
-                type="text"
-                name="category"
-                placeholder="Enter category"
-                value={formData.category}
-                onChange={handleChange}
-                className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
-                required
-              />
-            </div>
-
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-700">Stock Quantity</label>
-              <input
-                type="text"
-                name="stock"
-                placeholder="Enter stock quantity"
-                value={formData.stock}
-                onChange={handleChange}
-                className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
-                required
-              />
-            </div>
-
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-700">Threshold</label>
-              <input
-                type="text"
-                name="threshold"
-                placeholder="Enter threshold"
-                value={formData.threshold}
-                onChange={handleChange}
-                className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
-                required
-              />
-            </div>
-
-            <div className="space-y-2">
-              <label className="flex items-center gap-2 text-sm font-medium text-gray-700">
-                <Calendar className="w-4 h-4" />
-                Expiry Date
-              </label>
-              <input
-                type="date"
-                name="expiryDate"
-                value={formData.expiryDate}
-                onChange={handleChange}
-                className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
-                required
-              />
-            </div>
-
-            <div className="flex items-end gap-4">
-              <button
-                type="submit"
-                className="flex-1 bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-3 px-6 rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 font-medium"
-              >
-                <div className="flex items-center justify-center gap-2">
-                  <Plus className="w-5 h-5" />
-                  {editingId ? 'Update Product' : 'Add Product'}
-                </div>
-              </button>
-              {editingId && (
-                <button
-                  type="button"
-                  onClick={() => {
-                    setFormData(initialForm);
-                    setEditingId(null);
-                  }}
-                  className="px-6 py-3 bg-gray-200 text-gray-700 font-medium rounded-xl hover:bg-gray-300 transition-all"
-                >
-                  Cancel
-                </button>
-              )}
-            </div>
-          </form>
-        </div>
 
         {/* Product List */}
         <div className="bg-white rounded-2xl shadow-xl border border-gray-200 overflow-hidden">
@@ -420,20 +256,8 @@ const uniqueCategories = [...new Set(products.map((p) => p.category))];
                         </td>
                         <td className="px-6 py-4">
                           <div className="flex items-center gap-2">
-                            <button
-                              onClick={() => handleEdit(p)}
-                              className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
-                              title="Edit Product"
-                            >
-                              <Edit3 className="w-4 h-4" />
-                            </button>
-                            <button
-                              onClick={() => handleDelete(p._id)}
-                              className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                              title="Delete Product"
-                            >
-                              <Trash2 className="w-4 h-4" />
-                            </button>
+                            
+                            
                             <button
                               onClick={() => handleStockUpdate(p.sku, 'sale')}
                               className="px-3 py-1 text-xs font-medium text-orange-700 bg-orange-100 hover:bg-orange-200 rounded-lg transition-colors flex items-center gap-1"

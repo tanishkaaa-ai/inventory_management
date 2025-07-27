@@ -2,7 +2,7 @@ const staffModel = require("../models/staff-model");
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { generateToken } = require("../utils/generateToken");
-
+const productModel = require("../models/product-model");
 module.exports.registerStaff = async function(req, res){
     try{
         let {email, password, name} = req.body;
@@ -50,4 +50,20 @@ module.exports.loginStaff = async function(req, res){
             res.send("Email or Password incorrect");
         }
     })
+};
+
+exports.getStats = async (req, res) => {
+  try {
+    const totalProducts = await productModel.countDocuments();
+     const lowStockCount = await productModel.countDocuments({
+      $expr: { $lt: ["$stock", "$threshold"] }
+    });
+     const noStockCount = await productModel.countDocuments({
+      stock: 0
+    });
+
+    res.json({ totalProducts,noStockCount, lowStockCount });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 };

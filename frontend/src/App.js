@@ -7,6 +7,7 @@ import AdminDashboard from './pages/AdminDashboard';
 import StaffDashboard from './pages/StaffDashboard';
 import ProductManager from './components/admin/ProductManager';
 import AdminInventoryLogs  from './components/admin/AdminInventoryLogs';
+import ProductManagerstaff from './components/ProductManagerstaff';
 function App() {
   const [userType, setUserType] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -67,7 +68,7 @@ function App() {
           path="/staff"
           element={
             isAuthenticated && userType === 'staff' ? (
-              <StaffDashboard />
+              <StaffDashboard onLogout={handleLogout}/>
             ) : (
               <Navigate to="/" />
             )
@@ -78,6 +79,16 @@ function App() {
           element={
             isAuthenticated && userType === 'admin' ? (
               <ProductManager />
+          ) : (
+              <Navigate to="/" />
+          )
+          }
+        />
+        <Route
+          path="/staff/products"
+          element={
+            isAuthenticated && userType === 'staff' ? (
+              <ProductManagerstaff />
           ) : (
               <Navigate to="/" />
           )
