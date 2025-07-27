@@ -8,8 +8,6 @@ const config = require('config');
 require("dotenv").config();
 const mongoose = require("./config/mongoose-connect");
 const cors = require('cors');
-const statsRoute = require("./routes/stats-route");
-
 
 app.use(cors({
   origin: 'http://localhost:3000', // frontend URL
@@ -22,6 +20,8 @@ const adminrouter = require("./routes/adminRouter");
 const productrouter = require("./routes/productRouter");
 const logrouter = require("./routes/logRouter");
 const notirouter = require("./routes/notiRouter");
+const statsRoute = require("./routes/stats-route");
+
 
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
