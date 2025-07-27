@@ -1,10 +1,14 @@
 const ExcelJS = require('exceljs');
 const PDFDocument = require('pdfkit');
-const Product = require('../models/productModel');
+const Product = require('../models/product-model');
 
-module.exports.exportToExcel = async function (req, res) {
+exports.exportToExcel = async (req, res) => {
   try {
+    console.log("📤 Exporting to Excel...");
+
     const products = await Product.find();
+    console.log("✅ Products fetched:", products.length);
+
     const workbook = new ExcelJS.Workbook();
     const sheet = workbook.addWorksheet('Products');
 
@@ -13,18 +17,23 @@ module.exports.exportToExcel = async function (req, res) {
       { header: 'Category', key: 'category' },
       { header: 'Quantity', key: 'quantity' },
       { header: 'Barcode', key: 'barcode' },
-      { header: 'Low Stock Threshold', key: 'threshold' }
+      { header: 'Low Stock Threshold', key: 'threshold' },
     ];
 
-    sheet.addRows(products);
+    products.forEach(p => sheet.addRow(p));
 
-    res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    res.setHeader(
+      'Content-Type',
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    );
     res.setHeader('Content-Disposition', 'attachment; filename=products.xlsx');
 
     await workbook.xlsx.write(res);
     res.end();
   } catch (err) {
-    res.status(500).send('Error exporting to Excel');
+    console.error("❌ Excel export error:", err);
+    console.error(err);
+    res.status(500).send('Export failed');
   }
 };
 
