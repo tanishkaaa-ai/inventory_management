@@ -8,6 +8,8 @@ const config = require('config');
 require("dotenv").config();
 const mongoose = require("./config/mongoose-connect");
 const cors = require('cors');
+const statsRoute = require("./routes/stats-route");
+
 
 app.use(cors({
   origin: 'http://localhost:3000', // frontend URL
@@ -43,6 +45,7 @@ app.use("/admin",adminrouter);
 app.use("/product",productrouter);
 app.use("/log",logrouter);
 app.use("/notification",notirouter);
+app.use("/api/stats", statsRoute);
 
 app.listen(5000, () => {
     console.log("server running on port 5000");
