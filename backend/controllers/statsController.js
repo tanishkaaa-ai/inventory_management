@@ -2,10 +2,15 @@ const Product = require("../models/product-model");
 
 module.exports.getDashboardStats = async (req, res) => {
   try {
-    const categoryData = await Product.aggregate([
+    const rawCategoryData = await Product.aggregate([
       { $group: { _id: "$category", count: { $sum: 1 } } },
       { $project: { category: "$_id", count: 1, _id: 0 } }
     ]);
+
+    const categoryData = rawCategoryData.map(item => ({
+      name: item.category || "Uncategorized",
+      value: item.count
+    }));
 
     const lowStockItems = await Product.find({ stock: { $lt: 5 } })
       .select("name stock -_id");

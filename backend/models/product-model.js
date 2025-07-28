@@ -8,6 +8,8 @@ const ProductSchema = new mongoose.Schema({
     stock: { type: Number, required: true },
     threshold: { type: Number, required: true },
     expiryDate: { type: Date }
+},{
+    timestamps:true
 });
 
 module.exports = mongoose.model('Product', ProductSchema);

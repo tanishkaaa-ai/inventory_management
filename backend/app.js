@@ -20,7 +20,7 @@ const adminrouter = require("./routes/adminRouter");
 const productrouter = require("./routes/productRouter");
 const logrouter = require("./routes/logRouter");
 const notirouter = require("./routes/notiRouter");
-const statsRoute = require("./routes/stats-route");
+const statsRoute = require("./routes/stats-routes");
 
 
 app.use(express.json());
@@ -45,7 +45,7 @@ app.use("/admin",adminrouter);
 app.use("/product",productrouter);
 app.use("/log",logrouter);
 app.use("/notification",notirouter);
-app.use("/api/stats", statsRoute);
+app.use("/admin/dashboard-stats", statsRoute);
 
 app.listen(5000, () => {
     console.log("server running on port 5000");

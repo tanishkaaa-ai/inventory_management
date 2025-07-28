@@ -2,17 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { LogOut, Users, Package, AlertTriangle, Settings, FileText, BarChart3, Activity, Navigation, Menu, X } from 'lucide-react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import useStats from "@/hooks/useStats";
-import StockDistributionChart from "@/components/admin/charts/StockDistributionChart";
-import LowStockChart from "@/components/admin/charts/LowStockChart";
-import RecentUpdatesChart from "@/components/admin/charts/RecentUpdatesChart";
+// import useStats from "@/hooks/useStats";
+import StockDistributionChart from "../components/admin/charts/StockDistributionChart";
+import LowStockChart from "../components/admin/charts/LowStockItemsChart";
+import RecentUpdatesChart from "../components/admin/charts/RecentUpdatesChart";
 
 const AdminDashboard = ({ onLogout }) => {
   const navigate = useNavigate();
-  const { data, isLoading, error } = useStats();
 
-  if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>Error loading stats</div>;
+  // if (isLoading) return <div>Loading...</div>;
+  // if (error) return <div>Error loading stats</div>;
   
   const handleNavigate = (path) => {
     console.log('Navigate to:', path);
@@ -24,7 +23,11 @@ const AdminDashboard = ({ onLogout }) => {
     staffCount: 0,
     lowStockCount: 0,
   });
-
+   const [chartData, setChartData] = useState({
+    categoryData: [],
+    lowStockItems: [],
+    recentUpdates: [],
+  });
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const handleLogout = () => {
@@ -41,7 +44,15 @@ const AdminDashboard = ({ onLogout }) => {
         console.error('Failed to fetch stats:', err.message);
       }
     };
-
+     const fetchCharts = async () => {
+      const res = await axios.get('/admin/dashboard-stats');
+      setChartData({
+        categoryData: res.data.categoryData,
+        lowStockItems: res.data.lowStockItems,
+        recentUpdates: res.data.recentUpdates
+      });
+    };
+fetchCharts()
     fetchStats();
   }, []);
 
@@ -133,14 +144,7 @@ const AdminDashboard = ({ onLogout }) => {
           </div>
         </aside>
 
-        <div className="p-4">
-          <h1 className="text-xl font-bold mb-4">Inventory Insights</h1>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <StockDistributionChart data={data.categoryData} />
-            <LowStockChart data={data.lowStockItems} />
-            <RecentUpdatesChart data={data.recentUpdates} />
-          </div>
-        </div>
+       
 
         {/* Main Content */}
         <main className="flex-1 p-8">
@@ -257,6 +261,14 @@ const AdminDashboard = ({ onLogout }) => {
                     )}
                   </div>
                 ))}
+              </div>
+            </div>
+             <div className="mt-12">
+              <h2 className="text-2xl font-bold text-gray-800 mb-6">Inventory Insights</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <StockDistributionChart data={chartData.categoryData} />
+                <LowStockChart data={chartData.lowStockItems} />
+                <RecentUpdatesChart data={chartData.recentUpdates} />
               </div>
             </div>
           </div>
