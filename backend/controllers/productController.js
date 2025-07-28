@@ -113,11 +113,13 @@ module.exports.updateStock = async function (req, res) {
         if (product.stock < product.threshold) {
             const admins = await adminModel.find();
             for (const admin of admins) {
-                const pref = await notificationPreferenceModel.findOne({ user: admin._id });
-                if (pref?.emailEnabled && pref.stockAlertsEnabled) {
-                    await sendLowStockAlert(admin.email, product);
-                }
-            }
+    try {
+        await sendLowStockAlert(admin.email, product);
+        console.log(`✅ Email sent to ${admin.email}`);
+    } catch (e) {
+        console.error(`❌ Email failed for ${admin.email}:`, e.message);
+    }
+}
         }
 
         res.send("Stock updated and action logged successfully");
