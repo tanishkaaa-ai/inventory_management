@@ -1,10 +1,10 @@
-# 📦 Inventory Management Web App
+# Inventory Management Web App
 
 This web application is built to help businesses efficiently **manage and monitor their product inventory**. It provides a centralized platform for **tracking stock levels**, **managing user roles**, and ensuring smooth **day-to-day operations**. Designed with a focus on **usability and real-time updates**, the app aims to **simplify inventory handling** and improve overall workflow within an organization.
 
 ---
 
-## 🔍 Walkthrough
+## Walkthrough
 
 We begin at the **login page**, where users can securely sign in as an **Admin** or **Staff** based on their roles. Once logged in, the user is taken to the **dashboard**, which gives a clear overview of inventory status and key metrics.
 
@@ -20,7 +20,7 @@ Lastly, users can **export data** in **Excel or PDF formats** for reporting or b
 
 ---
 
-## 🧾 Inventory Log
+## Inventory Log
 
 The **Inventory Log** is an essential feature of this Stock Inventory Web App, designed to maintain a **detailed history of all inventory-related actions**.
 
@@ -34,7 +34,7 @@ The logs are stored in **MongoDB** and dynamically displayed using **React**, of
 
 ---
 
-## 📌 Conclusion
+## Conclusion
 
 This Inventory Management Web App provides a complete solution for **real-time stock control**, **user-specific access**, **automated logs**, and **data reporting**. With its clean interface and practical functionality, it supports businesses in maintaining accurate inventory records and improving operational efficiency.
 
