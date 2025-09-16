@@ -1,6 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const Product = require("../models/product-model");
 const inventoryLogModel = require("../models/inventoryLog-model");
 const notificationPreferenceModel = require("../models/notiPref-model");
 const { sendLowStockAlert } = require("../utils/emailService");
@@ -165,7 +164,7 @@ module.exports.search = async function(req, res){
     const query = req.query.q;
     const regex = new RegExp(query, 'i'); // case-insensitive
 
-    const results = await Product.find({
+    const results = await productModel.find({
         $or: [{ name: regex }, { barcode: regex }, { category: regex }],
     });
 
@@ -173,7 +172,7 @@ module.exports.search = async function(req, res){
 };
 
 module.exports.aggregateCategory = async function(req, res){
-    const result = await Product.aggregate([
+    const result = await productModel.aggregate([
       { $group: { _id: "$category", count: { $sum: 1 } } }
     ]);
     res.json(result);
@@ -182,7 +181,7 @@ module.exports.aggregateCategory = async function(req, res){
 
 module.exports.aggregateLowStock = async function(req, res) {
     try {
-      const allProducts = await Product.find(); // Get all products
+      const allProducts = await productModel.find(); // Get all products
   
       const lowStock = allProducts.filter(product =>
         product.quantity < product.Threshold
