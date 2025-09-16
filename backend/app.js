@@ -10,7 +10,7 @@ const mongoose = require("./config/mongoose-connect");
 const cors = require('cors');
 
 app.use(cors({
-  origin: 'http://localhost:3000', // frontend URL
+  origin: 'https://inventory-management-1-4jhb.onrender.com', // frontend URL
   credentials: true
 }));
 app.use(express.json());
@@ -47,7 +47,8 @@ app.use("/log",logrouter);
 app.use("/notification",notirouter);
 app.use("/admin/dashboard-stats", statsRoute);
 
-app.listen(5000, () => {
-    console.log("server running on port 5000");
-});
+const PORT = process.env.PORT || 5000;
 
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+});
