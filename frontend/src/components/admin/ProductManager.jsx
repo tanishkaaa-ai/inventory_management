@@ -28,7 +28,7 @@ const [categoryFilter, setCategoryFilter] = useState('');
 
   const fetchProducts = async () => {
     try {
-       const res = await axios.get('https://inventory-management-n2c8.onrender.com/product');
+       const res = await axios.get('https://inventory-management-n2c8.onrender.com/product/products',{ withCredentials: true });
        setProducts(res.data);
     } catch (err) {
       setError('Failed to fetch products');
@@ -43,9 +43,9 @@ const [categoryFilter, setCategoryFilter] = useState('');
     e.preventDefault();
     try {
       if (editingId) {
-    await axios.put(`https://inventory-management-n2c8.onrender.com/product/update/${editingId}`, formData);
+    await axios.put(`https://inventory-management-n2c8.onrender.com/product/update/${editingId}`, formData,{ withCredentials: true });
       } else {
-       await axios.post('https://inventory-management-n2c8.onrender.com/product/create', formData);
+       await axios.post('https://inventory-management-n2c8.onrender.com/product/create', formData,{ withCredentials: true });
       }
       setFormData(initialForm);
       setEditingId(null);
@@ -62,7 +62,7 @@ const [categoryFilter, setCategoryFilter] = useState('');
 
   const handleDelete = async (id) => {
     try {
-       await axios.delete(`https://inventory-management-n2c8.onrender.com/product/delete/${id}`);
+       await axios.delete(`https://inventory-management-n2c8.onrender.com/product/delete/${id}`,{ withCredentials: true });
       fetchProducts();
     } catch (err) {
       setError('Failed to delete product');
@@ -73,7 +73,7 @@ const [categoryFilter, setCategoryFilter] = useState('');
     const quantity = parseInt(prompt('Enter quantity:'), 10);
     if (!quantity || quantity <= 0) return;
     try {
-    await axios.put('https://inventory-management-n2c8.onrender.com/product/updateStock', { sku, action, quantity });
+    await axios.put('https://inventory-management-n2c8.onrender.com/product/updateStock', { sku, action, quantity },{ withCredentials: true });
       fetchProducts();
     } catch (err) {
       setError(err.response?.data || 'Stock update failed');
