@@ -12,7 +12,7 @@ const {
   recents
 } = require('../controllers/productController');
 
-const { getLogs } = require("../controllers/productController");
+const getLogs = require("../controllers/productController");
 
 const { exportToExcel, exportToPDF } = require("../controllers/exportController");
 
