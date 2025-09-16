@@ -21,7 +21,12 @@ module.exports.registerStaff = async function(req, res){
                         name,
                     });
                     let token = generateToken(staff);
-                    res.cookie('token', token);
+                    res.cookie('token', token, {
+                        httpOnly: true,       // cannot be accessed by JS
+                        secure: true,         // must be HTTPS
+                        sameSite: 'none',     // allow cross-site cookie
+                        maxAge: 24 * 60 * 60 * 1000 // optional: 1 day expiry
+                      });
                     res.send("user created successfully");
                 }
                 
@@ -43,7 +48,12 @@ module.exports.loginStaff = async function(req, res){
     bcrypt.compare(password, staff.password, function(err, result){
         if(result){
             let token = generateToken(staff);
-            res.cookie("token", token);
+            res.cookie('token', token, {
+                httpOnly: true,       // cannot be accessed by JS
+                secure: true,         // must be HTTPS
+                sameSite: 'none',     // allow cross-site cookie
+                maxAge: 24 * 60 * 60 * 1000 // optional: 1 day expiry
+              });
             res.send("you can login");
         }
         else{
