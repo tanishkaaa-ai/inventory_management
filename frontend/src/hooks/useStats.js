@@ -3,7 +3,7 @@ import axios from "axios";
 
 export default function useStats() {
   return useQuery(["dashboardStats"], async () => {
-    const res = await axios.get("http://localhost:5000/api/stats/dashboard-stats"); // change if needed
+    const res = await axios.get("https://inventory-management-n2c8.onrender.com/api/stats/dashboard-stats"); // change if needed
     return res.data;
   });
 }

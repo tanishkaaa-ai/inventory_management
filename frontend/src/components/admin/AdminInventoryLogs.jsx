@@ -212,13 +212,13 @@ const AdminInventoryLogs = () => {
             <div className="overflow-x-auto">
               <div className="flex justify-end gap-3 mb-4">
   <button
-    onClick={() => window.open('http://localhost:5000/product/log/export/pdf', '_blank')}
+    onClick={() => window.open('https://inventory-management-n2c8.onrender.com/product/log/export/pdf', '_blank')}
     className="bg-red-600 text-white px-4 py-2 rounded-xl hover:bg-red-700 transition-all text-sm font-medium"
   >
     Export PDF
   </button>
   <button
-    onClick={() => window.open('http://localhost:5000/product/log/export/excel', '_blank')}
+    onClick={() => window.open('https://inventory-management-n2c8.onrender.com/product/log/export/excel', '_blank')}
     className="bg-green-600 text-white px-4 py-2 rounded-xl hover:bg-green-700 transition-all text-sm font-medium"
   >
     Export Excel

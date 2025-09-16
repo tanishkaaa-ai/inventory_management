@@ -35,7 +35,7 @@ const Auth = ({ userType, onBack, onSuccess }) => {
         : `/staff/${isLogin ? 'login' : 'register'}`;
 
     try {
-      const res = await fetch(`http://localhost:5000${endpoint}`, {
+      const res = await fetch(`https://inventory-management-n2c8.onrender.com${endpoint}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include', // for cookies
