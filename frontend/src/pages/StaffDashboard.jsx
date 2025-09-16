@@ -37,7 +37,7 @@ const StaffDashboard = ({ onLogout }) => {
   }, []);
 
   const navigationItems = [
-    { label: 'Products', icon: Package, href: null, onClick: () => handleNavigate('staff/products') },
+    { label: 'Products', icon: Package, href: null, onClick: () => handleNavigate('/staff/products') },
     { label: 'Settings', icon: Settings, href: '#', onClick: null },
   ];
 
