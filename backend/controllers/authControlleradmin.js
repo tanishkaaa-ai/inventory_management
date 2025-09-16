@@ -24,7 +24,11 @@ module.exports.registerAdmin = async function(req, res){
                         name,
                     });
                     let token = generateToken(admin);
-                    res.cookie("token", token);
+                    res.cookie('token', token, {
+                        httpOnly: true,
+                        secure: true,
+                        sameSite: 'none'     // **must** be 'none' for subdomain → subdomain
+                      });
                     res.send("admin created successfully");
                 }
                 
