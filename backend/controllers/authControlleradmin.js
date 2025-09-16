@@ -36,7 +36,7 @@ module.exports.registerAdmin = async function(req, res){
             });
         });
     }
-
+//hiii
     catch(err){
         res.send(err.message);
     }
