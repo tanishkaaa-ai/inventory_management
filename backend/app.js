@@ -10,7 +10,7 @@ const mongoose = require("./config/mongoose-connect");
 const cors = require('cors');
 
 app.use(cors({
-  origin: 'https://inventory-management-1-4jhb.onrender.com', // frontend URL
+  origin: 'https://inventory-management-1-i52q.onrender.com', // frontend URL
   credentials: true
 }));
 app.use(express.json());
