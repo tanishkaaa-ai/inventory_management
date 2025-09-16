@@ -26,7 +26,7 @@ const StaffDashboard = ({ onLogout }) => {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const res = await axios.get('https://inventory-management-n2c8.onrender.com/staff/stats',{withCredentials: true});
+        const res = await axios.get('https://inventory-management-n2c8.onrender.com/staff/stats');
         setStats(res.data);
       } catch (err) {
         console.error('Failed to fetch stats:', err.message);
