@@ -37,7 +37,7 @@ const StaffDashboard = ({ onLogout }) => {
   }, []);
 
   const navigationItems = [
-    { label: 'Products', icon: Package, href: null, onClick: () => handleNavigate('https://inventory-management-n2c8.onrender.com/staff/products') },
+    { label: 'Products', icon: Package, href: null, onClick: () => handleNavigate('/products') },
     { label: 'Settings', icon: Settings, href: '#', onClick: null },
   ];
 
