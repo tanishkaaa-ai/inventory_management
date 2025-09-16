@@ -24,7 +24,7 @@ const isLoggedInAny = require('../middlewares/isLoggedInAny');
 
 const { exportLogsExcel, exportLogsPDF } = require("../controllers/exportController");
 const isLoggedinadmin = require("../middlewares/isLoggedinadmin");
-router.get('/', getAllProducts);
+router.get('/',isLoggedInAny, getAllProducts);
 router.post('/create', createProduct);
 router.put('/update/:id', updateProduct);
 router.delete('/delete/:id', deleteProduct);
