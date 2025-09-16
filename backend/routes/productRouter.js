@@ -29,17 +29,17 @@ router.post('/create',isAdmin, createProduct);
 router.put('/update/:id',isAdmin, updateProduct);
 router.delete('/delete/:id',isAdmin, deleteProduct);
 router.put("/updateStock",isLoggedInAny, updateStock);
-router.get("/search", search);
-router.get("/aggregate/category", aggregateCategory);
-router.get("/aggregate/low-stock", aggregateLowStock);
-router.get("/aggregate/recent", recents);
+router.get("/search",isLoggedInAny, search);
+router.get("/aggregate/category", isLoggedInAny,aggregateCategory);
+router.get("/aggregate/low-stock",isLoggedInAny, aggregateLowStock);
+router.get("/aggregate/recent",isLoggedInAny, recents);
 
-router.get("/logs", getLogs);
+router.get("/logs",isAdmin, getLogs);
 
-router.get('/export/excel', exportToExcel);
-router.get('/export/pdf', exportToPDF);
+router.get('/export/excel',isLoggedInAny, exportToExcel);
+router.get('/export/pdf',isLoggedInAny, exportToPDF);
 
 
-router.get("/log/export/excel", exportLogsExcel);
-router.get("/log/export/pdf", exportLogsPDF);
+router.get("/log/export/excel",isLoggedinadmin, exportLogsExcel);
+router.get("/log/export/pdf", isLoggedinadmin,exportLogsPDF);
 module.exports = router;
