@@ -24,7 +24,12 @@ module.exports.registerAdmin = async function(req, res){
                         name,
                     });
                     let token = generateToken(admin);
-                    res.cookie('token', token);
+                    res.cookie('token', token, {
+                        httpOnly: true,       // cannot be accessed by JS
+                        secure: true,         // must be HTTPS
+                        sameSite: 'none',     // allow cross-site cookie
+                        maxAge: 24 * 60 * 60 * 1000 // optional: 1 day expiry
+                      });
                     res.send("admin created successfully");
                 }
                 
@@ -46,7 +51,12 @@ module.exports.loginAdmin = async function(req, res){
     bcrypt.compare(password, admin.password, function(err, result){
         if(result){
             let token = generateToken(admin);
-            res.cookie("token", token);
+            res.cookie('token', token, {
+                httpOnly: true,       // cannot be accessed by JS
+                secure: true,         // must be HTTPS
+                sameSite: 'none',     // allow cross-site cookie
+                maxAge: 24 * 60 * 60 * 1000 // optional: 1 day expiry
+              });
             res.send("you can login");
         }
         else{
