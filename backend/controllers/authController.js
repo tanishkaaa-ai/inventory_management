@@ -21,11 +21,7 @@ module.exports.registerStaff = async function(req, res){
                         name,
                     });
                     let token = generateToken(staff);
-                    res.cookie('token', token, {
-                        httpOnly: true,
-                        secure: true,
-                        sameSite: 'none'     // **must** be 'none' for subdomain → subdomain
-                      });
+                    res.cookie('token', token);
                     res.send("user created successfully");
                 }
                 
