@@ -58,7 +58,7 @@ fetchCharts()
 
   const navigationItems = [
     { label: 'Manage Staff', icon: Users, href: '#', onClick: null },
-    { label: 'Products', icon: Package, href: null, onClick: () => handleNavigate('https://inventory-management-n2c8.onrender.com/admin/products') },
+    { label: 'Products', icon: Package, href: null, onClick: () => handleNavigate('/admin/products') },
     { label: 'Inventory Logs', icon: FileText, href: null, onClick: () => handleNavigate('https://inventory-management-n2c8.onrender.com/admin/inventory-logs') },
     { label: 'Settings', icon: Settings, href: '#', onClick: null },
   ];
