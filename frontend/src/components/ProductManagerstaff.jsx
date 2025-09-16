@@ -27,7 +27,7 @@ const [categoryFilter, setCategoryFilter] = useState('');
 
   const fetchProducts = async () => {
     try {
-       const res = await axios.get('https://inventory-management-n2c8.onrender.com/product');
+       const res = await axios.get('https://inventory-management-n2c8.onrender.com/product/products',{ withCredentials: true });
        setProducts(res.data);
     } catch (err) {
       setError('Failed to fetch products');
@@ -43,7 +43,7 @@ const [categoryFilter, setCategoryFilter] = useState('');
     const quantity = parseInt(prompt('Enter quantity:'), 10);
     if (!quantity || quantity <= 0) return;
     try {
-    await axios.put('https://inventory-management-n2c8.onrender.com/product/updateStock', { sku, action, quantity });
+    await axios.put('https://inventory-management-n2c8.onrender.com/product/updateStock', { sku, action, quantity },{ withCredentials: true });
       fetchProducts();
     } catch (err) {
       setError(err.response?.data || 'Stock update failed');

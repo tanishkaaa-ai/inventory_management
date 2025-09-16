@@ -28,7 +28,7 @@ const [categoryFilter, setCategoryFilter] = useState('');
 
   const fetchProducts = async () => {
     try {
-       const res = await axios.get('https://inventory-management-n2c8.onrender.com/product/products',{ withCredentials: true });
+       const res = await axios.get('https://inventory-management-n2c8.onrender.com/product',{ withCredentials: true });
        setProducts(res.data);
     } catch (err) {
       setError('Failed to fetch products');
