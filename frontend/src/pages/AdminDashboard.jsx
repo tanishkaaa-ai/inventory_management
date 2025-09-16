@@ -38,14 +38,14 @@ const AdminDashboard = ({ onLogout }) => {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const res = await axios.get('/admin/stats');
+        const res = await axios.get('https://inventory-management-n2c8.onrender.com/admin/stats');
         setStats(res.data);
       } catch (err) {
         console.error('Failed to fetch stats:', err.message);
       }
     };
      const fetchCharts = async () => {
-      const res = await axios.get('/admin/dashboard-stats');
+      const res = await axios.get('https://inventory-management-n2c8.onrender.com/admin/dashboard-stats');
       setChartData({
         categoryData: res.data.categoryData,
         lowStockItems: res.data.lowStockItems,
@@ -58,8 +58,8 @@ fetchCharts()
 
   const navigationItems = [
     { label: 'Manage Staff', icon: Users, href: '#', onClick: null },
-    { label: 'Products', icon: Package, href: null, onClick: () => handleNavigate('/admin/products') },
-    { label: 'Inventory Logs', icon: FileText, href: null, onClick: () => handleNavigate('/admin/inventory-logs') },
+    { label: 'Products', icon: Package, href: null, onClick: () => handleNavigate('https://inventory-management-n2c8.onrender.com/admin/products') },
+    { label: 'Inventory Logs', icon: FileText, href: null, onClick: () => handleNavigate('https://inventory-management-n2c8.onrender.com/admin/inventory-logs') },
     { label: 'Settings', icon: Settings, href: '#', onClick: null },
   ];
 

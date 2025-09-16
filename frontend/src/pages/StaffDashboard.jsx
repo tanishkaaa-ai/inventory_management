@@ -26,7 +26,7 @@ const StaffDashboard = ({ onLogout }) => {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const res = await axios.get('/staff/stats');
+        const res = await axios.get('https://inventory-management-n2c8.onrender.com/staff/stats');
         setStats(res.data);
       } catch (err) {
         console.error('Failed to fetch stats:', err.message);
@@ -37,7 +37,7 @@ const StaffDashboard = ({ onLogout }) => {
   }, []);
 
   const navigationItems = [
-    { label: 'Products', icon: Package, href: null, onClick: () => handleNavigate('/staff/products') },
+    { label: 'Products', icon: Package, href: null, onClick: () => handleNavigate('https://inventory-management-n2c8.onrender.com/staff/products') },
     { label: 'Settings', icon: Settings, href: '#', onClick: null },
   ];
 

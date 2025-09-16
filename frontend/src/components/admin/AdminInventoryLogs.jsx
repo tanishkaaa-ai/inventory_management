@@ -15,7 +15,7 @@ const AdminInventoryLogs = () => {
 
   const fetchLogs = async () => {
     try {
-       const res = await axios.get('/product/logs', { withCredentials: true });
+       const res = await axios.get('https://inventory-management-n2c8.onrender.com/product/logs', { withCredentials: true });
        setLogs(res.data.logs || []);
        setFilteredLogs(res.data.logs || []);
     } catch (err) {
