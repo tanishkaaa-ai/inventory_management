@@ -6,4 +6,4 @@ const NotificationPreferenceSchema = new mongoose.Schema({
     stockAlertsEnabled: { type: Boolean, default: true }
 });
 
-module.exports = mongoose.model("NotificationPreference", NotificationPreferenceSchema);
+module.exports = mongoose.model("notificationPreference", notificationPreferenceSchema);

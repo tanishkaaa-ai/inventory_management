@@ -11,4 +11,4 @@ const InventoryLogSchema = new mongoose.Schema({
     remarks: { type: String }
 });
 
-module.exports = mongoose.model("InventoryLog", InventoryLogSchema);
+module.exports = mongoose.model("inventorylog", inventoryLogSchema);
