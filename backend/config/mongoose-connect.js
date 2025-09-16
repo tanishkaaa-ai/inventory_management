@@ -3,7 +3,7 @@ const config = require('config');
 const dbgr = require('debug')("development:mongoose");
 
 mongoose
-    .connect(`${config.get("MONGODB_URI")}/inventory`)
+    .connect(`mongodb+srv://metanisha333:dFlRrWnUd02MoXdZ@cluster0.2bkwjmm.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0/inventory`)
     
     .then(function(){
         dbgr("connected");
